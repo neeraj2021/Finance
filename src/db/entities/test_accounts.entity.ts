@@ -9,10 +9,10 @@ import { MyBaseEntity } from './myBase.entity';
 @Entity()
 export class TestAccounts extends MyBaseEntity {
   @PrimaryGeneratedColumn({
-    type: 'bigint',
+    type: 'int',
     name: 'AccountId',
   })
-  accountId!: number;
+  accountId: number;
 
   @Column({
     nullable: false,
@@ -45,5 +45,5 @@ export class TestAccounts extends MyBaseEntity {
     default: (): string => 'CURRENT_TIMESTAMP(6)',
     name: 'StartDate',
   })
-  startDate!: Date;
+  startDate: Date;
 }
