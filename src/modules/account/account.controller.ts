@@ -20,12 +20,12 @@ export class AccountController {
 
   @Get('/')
   async accountList(@User() user: IUser) {
-    return await this.accountServices.accountList(user);
+    return await this.accountServices.accountList({ user });
   }
 
   @Post('/create')
   @UsePipes(new ValidationPipe())
   async newAccount(@Body() account: CreateAccountDTO, @User() user: IUser) {
-    return await this.accountServices.createAccount(account, user);
+    return await this.accountServices.createAccount({ body: account, user });
   }
 }

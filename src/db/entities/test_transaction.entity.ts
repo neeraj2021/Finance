@@ -9,7 +9,7 @@ import { MyBaseEntity } from './myBase.entity';
 @Entity()
 export class TestTransactions extends MyBaseEntity {
   @PrimaryGeneratedColumn({
-    type: 'bigint',
+    type: 'int',
     name: 'TransactionId',
   })
   transactionId: number;

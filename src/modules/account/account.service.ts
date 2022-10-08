@@ -14,7 +14,7 @@ export class AccountService {
     private testAccountRepository: Repository<TestAccounts>,
   ) {}
 
-  async accountList(user: IUser): Promise<AccountList[]> {
+  async accountList({ user }: { user: IUser }): Promise<AccountList[]> {
     return await this.testAccountRepository.find({
       select: {
         userName: true,
@@ -29,7 +29,13 @@ export class AccountService {
     });
   }
 
-  async createAccount(body: CreateAccountDTO, user: IUser): Promise<string> {
+  async createAccount({
+    body,
+    user,
+  }: {
+    body: CreateAccountDTO;
+    user: IUser;
+  }): Promise<string> {
     const requestId = uuidV4();
     const currentAmount = body.initialAmount;
     const data = { ...body, ...user, requestId, currentAmount };

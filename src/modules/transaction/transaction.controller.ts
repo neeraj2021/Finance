@@ -20,7 +20,7 @@ export class TransactionController {
 
   @Get('/')
   async allTransaction(@User() user: IUser) {
-    return this.transactionService.allTransactions(user);
+    return this.transactionService.allTransactions({ user });
   }
 
   @Post('/create')
@@ -29,6 +29,9 @@ export class TransactionController {
     @Body() transaction: CreateTransactionDTO,
     @User() user: IUser,
   ) {
-    return await this.transactionService.createTransaction(transaction, user);
+    return await this.transactionService.createTransaction({
+      transaction,
+      user,
+    });
   }
 }
