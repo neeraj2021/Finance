@@ -1,24 +1,12 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { TestAccounts } from './db/entities/test_accounts.entity';
 import { AccountModule } from './modules/account/account.module';
-import { TestTransactions } from './db/entities/test_transaction.entity';
-
-const typeOrmModule = TypeOrmModule.forRoot({
-  type: 'mysql',
-  host: 'localhost',
-  port: 3306,
-  username: 'root',
-  password: 'Neeraj@123',
-  database: 'sql_hr',
-  entities: [TestAccounts, TestTransactions],
-  synchronize: true,
-});
+import { typeOrmModule } from './db/dbConnector';
+import { TransactionModule } from './modules/transaction/transaction.module';
 
 @Module({
-  imports: [typeOrmModule, AccountModule],
+  imports: [typeOrmModule, AccountModule, TransactionModule],
   controllers: [AppController],
   providers: [AppService],
 })

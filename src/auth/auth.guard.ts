@@ -15,10 +15,10 @@ export class AuthGuard implements CanActivate {
       const decodeToken = await decode(loggedInUser);
 
       const userJson = decodeToken;
-      console.log(userJson);
       request.user = {
-        userId: `Alpha`,
-        emailId: 'nkm@123.com',
+        userId: userJson.user_id,
+        emailId: userJson.email,
+        name: userJson.name,
       };
 
       return true;
