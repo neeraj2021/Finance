@@ -1,19 +1,11 @@
-/*
- * Copyright (c) 2022. FieldAssist
- * All rights reserved.
- */
-
-import {
-  CreateDateColumn,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 export class MyBaseEntity {
-  @PrimaryGeneratedColumn({ type: 'bigint', name: 'Id' })
-  id!: number;
-
-  @PrimaryGeneratedColumn('uuid', { name: 'RequestId' })
+  @Column({
+    nullable: false,
+    type: 'varchar',
+    name: 'RequestId',
+  })
   requestId!: string;
 
   @CreateDateColumn({
@@ -31,4 +23,10 @@ export class MyBaseEntity {
     nullable: true,
   })
   updatedAt!: Date;
+
+  @Column({
+    nullable: false,
+    name: 'UserId',
+  })
+  userId: string;
 }

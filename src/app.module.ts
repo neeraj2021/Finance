@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TestAccounts } from './db/entities/test_accounts.entity';
 import { AccountModule } from './modules/account/account.module';
+import { TestTransactions } from './db/entities/test_transaction.entity';
 
 const typeOrmModule = TypeOrmModule.forRoot({
   type: 'mysql',
@@ -12,7 +13,7 @@ const typeOrmModule = TypeOrmModule.forRoot({
   username: 'root',
   password: 'Neeraj@123',
   database: 'sql_hr',
-  entities: [TestAccounts],
+  entities: [TestAccounts, TestTransactions],
   synchronize: true,
 });
 

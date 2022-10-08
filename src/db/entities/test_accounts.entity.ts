@@ -8,42 +8,33 @@ import { MyBaseEntity } from './myBase.entity';
 
 @Entity()
 export class TestAccounts extends MyBaseEntity {
+  @PrimaryGeneratedColumn({
+    type: 'bigint',
+    name: 'AccountId',
+  })
+  accountId!: number;
+
   @Column({
-    nullable: true,
+    nullable: false,
     name: 'UserName',
   })
   userName: string;
 
   @Column({
-    nullable: true,
-    name: 'UserId',
-  })
-  userId: string;
-
-  @Column({
-    nullable: true,
-    name: 'EmailId',
-  })
-  emailId: string;
-
-  @Column({
-    nullable: true,
+    nullable: false,
     name: 'AccountName',
   })
   accountName: string;
 
-  // @PrimaryGeneratedColumn({
-  //   name: 'AccountId',
-  // })
-  // accountId: number;
-
   @Column({
+    nullable: false,
     default: 0,
     name: 'InitialAmount',
   })
   initialAmount: number;
 
   @Column({
+    nullable: false,
     default: 0,
     name: 'CurrentAmount',
   })
