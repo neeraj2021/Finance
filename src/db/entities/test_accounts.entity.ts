@@ -3,8 +3,10 @@ import {
   Column,
   CreateDateColumn,
   PrimaryGeneratedColumn,
+  OneToMany,
 } from 'typeorm';
 import { MyBaseEntity } from './myBase.entity';
+import { TestTransactions } from './test_transaction.entity';
 
 @Entity()
 export class TestAccounts extends MyBaseEntity {
@@ -46,4 +48,7 @@ export class TestAccounts extends MyBaseEntity {
     name: 'StartDate',
   })
   startDate: Date;
+
+  @OneToMany(() => TestTransactions, (transaction) => transaction.accountId)
+  transaction: TestTransactions[];
 }

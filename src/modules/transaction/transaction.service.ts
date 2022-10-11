@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import _ from 'lodash';
 import { TestAccounts } from 'src/db/entities/test_accounts.entity';
 import { TestTransactions } from 'src/db/entities/test_transaction.entity';
 import { CreateTransactionDTO } from 'src/dto/transaction/CreateTransactionDTO.dto';
@@ -22,11 +23,34 @@ export class TransactionService {
   }: {
     user: IUser;
   }): Promise<TestTransactions[]> {
-    return await this.testTransactionsRepository.find({
-      where: {
-        userId: user.userId,
-      },
+    const data = await this.testTransactionsRepository
+      .createQueryBuilder('t')
+      .select([
+        't.transactionId',
+        't.amount',
+        't.type',
+        't.transactionDate',
+        't.description',
+      ])
+      .leftJoin('t.accountDetail', 'a')
+      .addSelect(['a.accountName'])
+      .where('t.userId = :id', {
+        id: user.userId,
+      })
+      .getMany();
+
+    // _.merge(transaction, transaction.accountDetail),
+
+    const allTransactions = data.map((transaction) => {
+      console.log(transaction.accountDetail.accountName);
+      const obj = {
+        ...transaction,
+        accountName: transaction?.accountDetail?.accountName,
+      };
+      delete obj.accountDetail;
+      return obj;
     });
+    return allTransactions;
   }
 
   async createTransaction({
@@ -37,8 +61,10 @@ export class TransactionService {
     user: IUser;
   }): Promise<string> {
     const requestId = uuidV4();
-    const data = { ...transaction, ...user, requestId };
-
+    const accountDetail = await this.testAccountRepository.findOneBy({
+      accountId: transaction.accountId,
+    });
+    const data = { ...transaction, ...user, requestId, accountDetail };
     const { amount, accountId, type } = data;
 
     await this.updateCurrentAmount({ amount, accountId, type });

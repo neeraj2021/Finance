@@ -11,4 +11,5 @@ export const typeOrmModule = TypeOrmModule.forRoot({
   database: 'sql_hr',
   entities: [TestAccounts, TestTransactions],
   synchronize: false,
+  logging: false,
 });

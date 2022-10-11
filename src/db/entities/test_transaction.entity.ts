@@ -2,9 +2,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { MyBaseEntity } from './myBase.entity';
+import { TestAccounts } from './test_accounts.entity';
 
 @Entity()
 export class TestTransactions extends MyBaseEntity {
@@ -45,4 +48,10 @@ export class TestTransactions extends MyBaseEntity {
     length: 1000,
   })
   description: string;
+
+  @ManyToOne(() => TestAccounts, (accounts) => accounts.accountId)
+  @JoinColumn({
+    name: 'AccountDetail',
+  })
+  accountDetail: TestAccounts;
 }
