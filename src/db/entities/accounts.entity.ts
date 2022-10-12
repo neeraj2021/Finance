@@ -6,10 +6,10 @@ import {
   OneToMany,
 } from 'typeorm';
 import { MyBaseEntity } from './myBase.entity';
-import { TestTransactions } from './test_transaction.entity';
+import { Transactions } from './transaction.entity';
 
 @Entity()
-export class TestAccounts extends MyBaseEntity {
+export class Accounts extends MyBaseEntity {
   @PrimaryGeneratedColumn({
     type: 'int',
     name: 'AccountId',
@@ -49,6 +49,6 @@ export class TestAccounts extends MyBaseEntity {
   })
   startDate: Date;
 
-  @OneToMany(() => TestTransactions, (transaction) => transaction.accountId)
-  transaction: TestTransactions[];
+  @OneToMany(() => Transactions, (transaction) => transaction.accountId)
+  transaction: Transactions[];
 }

@@ -7,10 +7,10 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { MyBaseEntity } from './myBase.entity';
-import { TestAccounts } from './test_accounts.entity';
+import { Accounts } from './accounts.entity';
 
 @Entity()
-export class TestTransactions extends MyBaseEntity {
+export class Transactions extends MyBaseEntity {
   @PrimaryGeneratedColumn({
     type: 'int',
     name: 'TransactionId',
@@ -49,9 +49,9 @@ export class TestTransactions extends MyBaseEntity {
   })
   description: string;
 
-  @ManyToOne(() => TestAccounts, (accounts) => accounts.accountId)
+  @ManyToOne(() => Accounts, (accounts) => accounts.accountId)
   @JoinColumn({
     name: 'AccountDetail',
   })
-  accountDetail: TestAccounts;
+  accountDetail: Accounts;
 }

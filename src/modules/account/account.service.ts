@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { TestAccounts } from 'src/db/entities/test_accounts.entity';
+import { Accounts } from 'src/db/entities/accounts.entity';
 import { CreateAccountDTO } from 'src/dto/account/CreateAccountDTO.dto';
 import { IUser } from 'src/types/user.type';
 import { Repository } from 'typeorm';
@@ -10,8 +10,8 @@ import { AccountList } from 'src/types/account.type';
 @Injectable()
 export class AccountService {
   constructor(
-    @InjectRepository(TestAccounts)
-    private testAccountRepository: Repository<TestAccounts>,
+    @InjectRepository(Accounts)
+    private testAccountRepository: Repository<Accounts>,
   ) {}
 
   async accountList({ user }: { user: IUser }): Promise<AccountList[]> {

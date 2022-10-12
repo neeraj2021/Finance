@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import _ from 'lodash';
-import { TestAccounts } from 'src/db/entities/test_accounts.entity';
-import { TestTransactions } from 'src/db/entities/test_transaction.entity';
+import { Accounts } from 'src/db/entities/accounts.entity';
+import { Transactions } from 'src/db/entities/transaction.entity';
 import { CreateTransactionDTO } from 'src/dto/transaction/CreateTransactionDTO.dto';
 import { IUser } from 'src/types/user.type';
 import { Repository } from 'typeorm';
@@ -11,18 +10,14 @@ import { v4 as uuidV4 } from 'uuid';
 @Injectable()
 export class TransactionService {
   constructor(
-    @InjectRepository(TestTransactions)
-    private testTransactionsRepository: Repository<TestTransactions>,
+    @InjectRepository(Transactions)
+    private testTransactionsRepository: Repository<Transactions>,
 
-    @InjectRepository(TestAccounts)
-    private testAccountRepository: Repository<TestAccounts>,
+    @InjectRepository(Accounts)
+    private testAccountRepository: Repository<Accounts>,
   ) {}
 
-  async allTransactions({
-    user,
-  }: {
-    user: IUser;
-  }): Promise<TestTransactions[]> {
+  async allTransactions({ user }: { user: IUser }): Promise<Transactions[]> {
     const data = await this.testTransactionsRepository
       .createQueryBuilder('t')
       .select([
@@ -83,7 +78,7 @@ export class TransactionService {
   }): Promise<void> {
     amount = Number(amount);
     accountId = Number(accountId);
-    const account: TestAccounts = await this.testAccountRepository.findOneBy({
+    const account: Accounts = await this.testAccountRepository.findOneBy({
       accountId: accountId,
     });
 
