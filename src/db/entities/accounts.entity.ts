@@ -29,6 +29,9 @@ export class Accounts extends MyBaseEntity {
   accountName: string;
 
   @Column({
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
     nullable: false,
     default: 0,
     name: 'InitialAmount',
@@ -36,6 +39,9 @@ export class Accounts extends MyBaseEntity {
   initialAmount: number;
 
   @Column({
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
     nullable: false,
     default: 0,
     name: 'CurrentAmount',

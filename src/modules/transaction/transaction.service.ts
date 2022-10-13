@@ -37,7 +37,6 @@ export class TransactionService {
     // _.merge(transaction, transaction.accountDetail),
 
     const allTransactions = data.map((transaction) => {
-      console.log(transaction.accountDetail.accountName);
       const obj = {
         ...transaction,
         accountName: transaction?.accountDetail?.accountName,
@@ -84,8 +83,8 @@ export class TransactionService {
 
     const updatedAmount =
       type == 'Credit'
-        ? account.currentAmount + Number(amount)
-        : account.currentAmount - Number(amount);
+        ? Number(account.currentAmount) + Number(amount)
+        : Number(account.currentAmount) - Number(amount);
     await this.testAccountRepository.update(
       { accountId: accountId },
       { currentAmount: updatedAmount },

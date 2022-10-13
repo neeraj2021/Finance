@@ -11,5 +11,5 @@ export class CreateAccountDTO {
   initialAmount: number;
 
   @IsNotEmpty()
-  startDate: Date;
+  startDate: string;
 }

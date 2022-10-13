@@ -18,7 +18,9 @@ export class Transactions extends MyBaseEntity {
   transactionId: number;
 
   @Column({
-    type: 'int',
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
     name: 'Amount',
   })
   amount: number;
