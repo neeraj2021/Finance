@@ -10,7 +10,11 @@ export class AuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     try {
-      const loggedInUser: string | undefined = request.cookies.accessToken;
+      let loggedInUser: string | undefined =
+        request?.cookies?.accessToken || undefined;
+      if (!loggedInUser) {
+        loggedInUser = request.headers.accesstoken;
+      }
       const decodeToken = await decode(loggedInUser);
 
       const userJson = decodeToken;
