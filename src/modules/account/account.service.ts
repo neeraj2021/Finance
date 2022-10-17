@@ -22,6 +22,7 @@ export class AccountService {
         accountName: true,
         currentAmount: true,
         initialAmount: true,
+        createdAt: true,
       },
       where: {
         userId: user.userId,

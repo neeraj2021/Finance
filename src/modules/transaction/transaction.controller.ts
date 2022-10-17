@@ -6,6 +6,8 @@ import {
   ValidationPipe,
   UsePipes,
   Get,
+  Param,
+  Query,
 } from '@nestjs/common';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { IUser } from 'src/types/user.type';
@@ -21,6 +23,14 @@ export class TransactionController {
   @Get('/')
   async allTransaction(@User() user: IUser) {
     return this.transactionService.allTransactions({ user });
+  }
+
+  @Get('/recent-transaction/:accountId')
+  async recentTransaction(
+    @User() user: IUser,
+    @Param('accountId') accountId: number,
+  ) {
+    return this.transactionService.recentTransaction(user, accountId);
   }
 
   @Post('/create')

@@ -32,9 +32,8 @@ export class TransactionService {
       .where('t.userId = :id', {
         id: user.userId,
       })
+      .orderBy('t.transactionDate', 'DESC')
       .getMany();
-
-    // _.merge(transaction, transaction.accountDetail),
 
     const allTransactions = data.map((transaction) => {
       const obj = {
@@ -45,6 +44,37 @@ export class TransactionService {
       return obj;
     });
     return allTransactions;
+  }
+
+  async recentTransaction(user: IUser, accountId: number) {
+    const data = await this.testTransactionsRepository
+      .createQueryBuilder('t')
+      .select([
+        't.transactionId',
+        't.amount',
+        't.type',
+        't.transactionDate',
+        't.description',
+      ])
+      .leftJoin('t.accountDetail', 'a')
+      .addSelect(['a.accountName'])
+      .where('t.userId=:id and t.accountId=:accountId', {
+        id: user.userId,
+        accountId: accountId,
+      })
+      .orderBy('t.transactionDate', 'DESC')
+      .limit(10)
+      .getMany();
+
+    const recentTransactions = data.map((transaction) => {
+      const obj = {
+        ...transaction,
+        accountName: transaction?.accountDetail?.accountName,
+      };
+      delete obj.accountDetail;
+      return obj;
+    });
+    return recentTransactions;
   }
 
   async createTransaction({
