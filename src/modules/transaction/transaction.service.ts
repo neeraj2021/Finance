@@ -6,6 +6,7 @@ import { CreateTransactionDTO } from 'src/dto/transaction/CreateTransactionDTO.d
 import { IUser } from 'src/types/user.type';
 import { Repository } from 'typeorm';
 import { v4 as uuidV4 } from 'uuid';
+import { TransactionTypes } from 'src/constants/TransactionTypes';
 
 @Injectable()
 export class TransactionService {
@@ -28,10 +29,11 @@ export class TransactionService {
         't.description',
       ])
       .leftJoin('t.accountDetail', 'a')
-      .addSelect(['a.accountName'])
+      .addSelect(['a.accountName', 'a.accountId'])
       .where('t.userId = :id', {
         id: user.userId,
       })
+      .andWhere('t.IsDeleted = false')
       .orderBy('t.transactionDate', 'DESC')
       .getMany();
 
@@ -39,6 +41,7 @@ export class TransactionService {
       const obj = {
         ...transaction,
         accountName: transaction?.accountDetail?.accountName,
+        accountId: transaction?.accountDetail?.accountId,
       };
       delete obj.accountDetail;
       return obj;
@@ -62,6 +65,7 @@ export class TransactionService {
         id: user.userId,
         accountId: accountId,
       })
+      .andWhere('t.IsDeleted = false')
       .orderBy('t.transactionDate', 'DESC')
       .limit(10)
       .getMany();
@@ -96,7 +100,7 @@ export class TransactionService {
     return 'Transaction Added';
   }
 
-  async updateCurrentAmount({
+  private async updateCurrentAmount({
     amount,
     accountId,
     type,
@@ -112,12 +116,73 @@ export class TransactionService {
     });
 
     const updatedAmount =
-      type == 'Credit'
+      type == TransactionTypes.CREDIT
         ? Number(account.currentAmount) + Number(amount)
         : Number(account.currentAmount) - Number(amount);
     await this.testAccountRepository.update(
       { accountId: accountId },
       { currentAmount: updatedAmount },
     );
+  }
+
+  async deleteTransaction(id: number): Promise<string> {
+    const transaction: Transactions =
+      await this.testTransactionsRepository.findOneBy({
+        transactionId: id,
+      });
+    if (transaction.IsDeleted) {
+      throw Error(`Transaction with id ${id} is already deleted`);
+    }
+    transaction.IsDeleted = true;
+    await this.testTransactionsRepository
+      .createQueryBuilder()
+      .update(Transactions)
+      .set({
+        IsDeleted: true,
+      })
+      .where('TransactionId = :id', { id: id })
+      .execute();
+    const type =
+      transaction.type == TransactionTypes.CREDIT
+        ? TransactionTypes.DEBIT
+        : TransactionTypes.CREDIT;
+    await this.updateCurrentAmount({
+      amount: transaction.amount,
+      accountId: transaction.accountId,
+      type,
+    });
+    return `Transaction with id ${id} is deleted`;
+  }
+
+  async updateTransaction(
+    id: number,
+    body: CreateTransactionDTO,
+  ): Promise<string> {
+    const transaction: Transactions =
+      await this.testTransactionsRepository.findOneBy({
+        transactionId: id,
+      });
+    const oldAmount = transaction.amount;
+    const newAmount = body.amount;
+
+    transaction.IsDeleted = true;
+    await this.testTransactionsRepository
+      .createQueryBuilder()
+      .update(Transactions)
+      .set({
+        amount: newAmount,
+      })
+      .where('TransactionId = :id', { id: id })
+      .execute();
+
+    const diff = newAmount - oldAmount;
+
+    await this.updateCurrentAmount({
+      amount: diff,
+      accountId: transaction.accountId,
+      type: transaction.type,
+    });
+
+    return 'Transaction Updated Sucessfully';
   }
 }

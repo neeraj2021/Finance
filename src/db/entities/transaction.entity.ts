@@ -51,6 +51,13 @@ export class Transactions extends MyBaseEntity {
   })
   description: string;
 
+  @Column({
+    type: 'boolean',
+    name: 'IsDeleted',
+    default: false,
+  })
+  IsDeleted: boolean;
+
   @ManyToOne(() => Accounts, (accounts) => accounts.accountId)
   @JoinColumn({
     name: 'AccountDetail',

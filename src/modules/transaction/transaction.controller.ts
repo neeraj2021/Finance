@@ -7,7 +7,7 @@ import {
   UsePipes,
   Get,
   Param,
-  Query,
+  Delete,
 } from '@nestjs/common';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { IUser } from 'src/types/user.type';
@@ -43,5 +43,18 @@ export class TransactionController {
       transaction,
       user,
     });
+  }
+
+  @Delete('delete/:id')
+  async deleteTransaction(@Param('id') id: number) {
+    return await this.transactionService.deleteTransaction(id);
+  }
+
+  @Post('update/:id')
+  async updateTransaction(
+    @Param('id') id: number,
+    @Body() transaction: CreateTransactionDTO,
+  ) {
+    return this.transactionService.updateTransaction(id, transaction);
   }
 }
